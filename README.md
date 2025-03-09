@@ -3,6 +3,8 @@ El kit Motorola MEK6800D2 es una SBC (_Single Board Computer_) basada en el proc
 
 El kit usado en este proyecto no incluye la placa del teclado, por lo que el principal objetivo es construir un módulo de teclado casi funcionalmente equivalente al diseño original de Motorola, pero simplificado por razones de tamaño del circuito y costo de los componentes. Tener en cuenta que el módulo del teclado es esencial para el funcionamiento del kit, puesto que no puede realizarse ninguna operación sin dicho componente (a menos que se hagan numerosas modificaciones al circuito).
 
+<div align="center"><img src="https://github.com/user-attachments/assets/bd3013f9-7c9d-4a70-92f9-d56a952933e1" style="width:75%;height:75%;text-align:center;"></img></div>
+
 ## Descripción General
 
 El módulo principal incluye:
@@ -90,4 +92,101 @@ Ver que las conexiones de entrada del integrado son las cuatro columnas del tecl
 
 Para implementar el teclado se decidió utilizar dos placas de circuito. La placa principal es el teclado y display, junto a la electrónica de soporte. Esta se conecta mediante un cable plano de 20 conductores a un módulo adaptador que permite conectar el teclado al MPU sin tener que utilizar el conector de borde de 50 pines propuesto por Motorola.
 
-La placa adaptadora se monta sobre el zócalo de U21 en el módulo MPU, y contiene un conector de 20 pines para el teclado. Esta misma conexión es la responsable de brindar alimentación al MPU: +5V y tierra. El adaptador posee un zócalo para un conector tipo Berg de 4 pines para brindar alimentación al MPU de forma más segura que a través de las conexiones de alimentación de U21.
+La placa adaptadora se monta sobre el zócalo de U21 en el módulo MPU, y contiene un conector de 20 pines para el teclado. Esta misma conexión es la responsable de brindar alimentación al MPU: +5V y tierra. El adaptador posee un zócalo para un conector tipo Berg de 4 pines para brindar alimentación al MPU de forma más segura que a través de las conexiones de alimentación de U21. Esta placa se muestra en la siguiente figura:
+
+<div align="center"><img src="https://github.com/user-attachments/assets/b2f117d8-6fd7-49af-a511-35797e052f71" style="width:30%;height:30%;text-align:center;"></img></div>
+
+Se puede ver que el módulo adaptador se instala directamente en el zócalo reservado para el integrado MC6820, que a su vez se instala sobre el adaptador. Se puede apreciar también el cable plano que vincula el MPU con el teclado.
+
+Respetando los planos de circuito explicados en las secciones anteriores se construyó un prototipo en una placa perforada de 9x15cm. El resultado se muestra en la siguiente figura:
+
+<div align="center"><img src="https://github.com/user-attachments/assets/e3570199-fadc-4905-a605-2bf2cd01ad07" style="width:30%;height:30%;text-align:center;"></img></div>
+
+### Preparación para pruebas
+
+Para validar el diseño propuesto se conectan los componentes de la siguiente manera:
+- El módulo adaptador se conecta en la posición U21 del módulo MPU, con la conexión de alimentación siguiendo la dirección del interruptor de reset. Alternativamente, se puede conectar el MC6820 al adaptador, con el pin 1 hacia la conexión de alimentación. Luego se conecta el adaptador siguiendo la orientación original de U21.
+- El cable plano se conecta con el pin 1 (marcado en rojo) apuntando a la parte inferior de la placa, o bien tomando como guía el segundo círculo amarillo, o dejando la muezca del conector apuntando hacia el integrado MC6820.
+- La alimentación del MPU se conecta usando un cable de alimentación similar el de una disquetera de 3.5", con el cable rojo (+5V) más cercano al extremo izquierdo del módulo, o bien con la muezca del conector hacia arriba.
+- En la placa del teclado, se conecta el cable plano tal que el pin 1 apunte hacia la parte inferior del teclado, o bien siguiendo el círculo amarillo.
+- La alimentación del sistema completo se conecta al teclado de igual forma que la alimentación del MPU al adaptador. Se conecta la entrada (un cable similar al de una disquetera de 3.5") siguiendo el círculo amarillo, o bien sabiendo que el cable rojo (+5V) es el más alejado del LED de encendido.
+
+En la siguiente figura se muestra el sistema completo listo para iniciar las pruebas de funcionamiento:
+
+Para alimentar el kit completo se utiliza una fuente ATX estándar. De acuerdo con la documentación de Motorola, una fuente que proporcione +5V/6A es más que suficiente.
+
+### Pruebas de validación
+
+Con el objetivo de comprobar el correcto funcionamiento del kit se escribió un programa en lenguaje de máquina MC6800 que realiza una simple prueba de memoria. El algoritmo es descrito por el siguiente diagrama de flujos:
+
+<div align="center"><img src="https://github.com/user-attachments/assets/ae4fcadf-f04c-467e-bf97-36b8f5e9491e" style="width:30%;height:30%;text-align:center;"></img></div>
+
+En el diagrama, el reporte de error se corresponde con la escritura en RAM del valor `$FF` en caso de producirse un error. El control es devuelto a JBUG una vez realizada la prueba de memoria. Se puede consultar la dirección en la que terminó la prueba ingresando `M A026 G`. El primer byte de la dirección aparecerá en el display. Ingresar `G` para ver el segundo byte. En un kit sin fallas, las direcciones `ACTUAL` y `FIN` deberían ser iguales.
+
+Asimismo, se puede consultar el estado del programa con `M A023 G`.
+
+El programa se ingresa de a un byte utilizando `M` a partir de la dirección de memoria `$A023` (datos) y `$A030` (programa). Por ejemplo, la primera instrucción, `LDX INICIO`, se ingresa con `A024 M FE G A0 G 24 G`. El comportamiento del kit será de la siguiente manera:
+- Se ingresa la dirección `$A024`, seguido del comando `M`
+- El display muestra la dirección `$A024`, junto a su valor (inicialmente desconocido)
+- Se ingresa el byte `$FE` (instrucción `LDX`), seguido de `G`. Esto escribe el valor `$FE` en `$A024` y pasa a la siguiente posición en la memoria
+- El display muestra la dirección `$A025`, junto a su valor
+- Se ingresa `$A0` (el primer byte de la dirección `INICIO`), seguido de `G`
+- El display muestra la dirección `$A026`, junto a su valor
+- Se ingresa `$24` (el segundo byte de `INICIO`), seguido de `G`
+
+El programa completo se incluye a continuación, tanto en lenguaje de máquina MC6800 como en ensamblador, siguiendo la sintaxis detallada en el manual de usuario del kit.
+
+```
+                ;-----------------------------------
+                ; MEK6800D2 MEMORY TEST
+                ;
+                ; CONSTANTINO A.PALACIO, 2025-03-08
+                ;-----------------------------------
+A023            ORG            $A023
+                ;
+                ; PROGRAM STATUS
+                ;
+A023  00        STATUS  FCB    $00
+                ;
+                ; RAM POINTERS
+                ;
+A024  00 00     INICIO  FDB    $0000
+A026  00 00     ACTUAL  FDB    $0000
+A028  02 00     FIN     FDB    $0200
+                ;
+                ; MAIN PROGRAM
+                ;
+A030                    ORG    $A030
+A030  FE A0 24  INIPGM  LDX    INICIO
+A033  FF A0 26          STX    ACTUAL
+                ; LOAD 1ST PATTERN,
+                ;   SAVE IT TO MEMORY
+A036  86 00     LOOP1   LDA A  #$00
+A038  A7 00             STA A  0,X
+                ; SEE IF WRITTEN CORRECTLY
+A03A  A1 00             CMP A  0,X
+A03C  26 13             BNE    ERROR
+                ; REPEAT FOR 2ND PATTERN
+A03E  86 FF             LDA A  #$FF
+A040  A7 00             STA A  0,X
+A042  A1 00             CMP A  0,X
+A044  26 0B             BNE    ERROR
+                ; CHECK NEXT ADDRESS,
+                ;   SEE IF TEST IS DONE
+A046  08                INX
+A047  FF A0 26          STX    ACTUAL
+A04A  BC A0 28          CPX    FIN
+A04D  26 E7             BNE    LOOP1
+A04F  20 07             BRA    FINPGM
+                ;
+                ; MEMORY ERROR, STATUS=$FF
+                ;
+A051  FE A0 23  ERROR   LDX    STATUS
+A054  86 FF             LDA A  #$FF
+A056  A7 00             STA A  0,X
+                ;
+                ; RETURN TO JBUG
+                ;
+A058  3F        FINPGM  SWI
+                        END
+```
