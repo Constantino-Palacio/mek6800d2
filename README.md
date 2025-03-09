@@ -3,8 +3,6 @@ El kit Motorola MEK6800D2 es una SBC (_Single Board Computer_) basada en el proc
 
 El kit usado en este proyecto no incluye la placa del teclado, por lo que el principal objetivo es construir un módulo de teclado casi funcionalmente equivalente al diseño original de Motorola, pero simplificado por razones de tamaño del circuito y costo de los componentes. Tener en cuenta que el módulo del teclado es esencial para el funcionamiento del kit, puesto que no puede realizarse ninguna operación sin dicho componente (a menos que se hagan numerosas modificaciones al circuito).
 
-<div align="center"><img src="https://github.com/user-attachments/assets/bd3013f9-7c9d-4a70-92f9-d56a952933e1" style="width:75%;height:75%;text-align:center;"></img></div>
-
 ## Descripción General
 
 El módulo principal incluye:
@@ -13,12 +11,24 @@ El módulo principal incluye:
 - 256 bytes de RAM
 - 2 módulos de E/S MC6820
 - 1 módulo de comunicación serie MC6850
+- Lógica para interfaz EXORciser
+
+La siguiente imagen muestra los componentes del módulo MPU:
+<div align="center"><img src="https://github.com/user-attachments/assets/bfc915bf-df68-46a2-821e-04cb14aab5c1" style="width:75%;height:75%;text-align:center;"></img></div>
 
 El módulo de teclado contiene:
 - 16 teclas para entrada de direcciones/datos en formato hexadecimal
 - 8 teclas de función: P, L, N, V, M, E, R, G
 - 6 unidades de display de 7 segmentos
 - Lógica y conexiones para almacenamiento de datos en cassette.
+
+### Organización
+
+El módulo MPU provee solamente las conexiones para direccionar 512 bytes de RAM y 3KB de ROM, en varios módulos. Para conectar más memoria debe recurrirse a un módulo de expansión conectado a la interfaz EXORciser. El mapa de memoria es el siguiente:
+
+<div align="center"><img src="https://github.com/user-attachments/assets/0cb3d913-e9c2-4f32-bb50-88eda9686fca" style="width:25%;height:25%;text-align:center;"></img></div>
+
+Ver que la RAM de la placa es la base del mapa de direcciones, mientras que todo lo referido al bus de expansión es el tope del espacio de direccionamiento. Los espacios vacantes entre las direcciones se reservan para implementar E/S mapeada en memoria.
 
 ## Documentación
 
