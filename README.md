@@ -66,9 +66,7 @@ Para analizar el funcionamiento de este circuito se recurre al manual de uso del
 
 Es fácil ver que los patrones binarios están "invertidos" frente a lo observado en el display. Esto se debe a que el módulo de teclado emplea display de tipo cátodo común, en los que se selecciona un dígito con un nivel lógico bajo en la entrada `CC` y se selecciona cada segmento colocando la entrada correspondiente en un nivel lógico alto. De esto se deduce que los circuitos de control con transistores PNP actúan como inversores lógicos.
 
-Un circuito integrado TTL que cumple con esta funcionalidad es el 74240, un buffer/driver inversor de 8 bits. El componente particular utilizado es el SN74ALS240, fabricado por Texas Instruments.
-
-Al ser de 8 bits, sobra un inversor. Esto podría verse como un "desperdicio" de transistores, aunque no es significativo frente al ahorro en cantidad de componentes, complejidad y tamaño del circuito final. Otra alternativa podría haber sido utilizar un 7404, seis inversores en un mismo paquete. Sin embargo, al requerirse 7, el último debería armarse usando un circuito como el sugerido por Motorola, lo que complejiza el diseño en el acotado espacio del que se dispone.
+Un circuito integrado TTL que cumple con esta funcionalidad es el 74240, un buffer/driver inversor de 8 bits. Al ser de 8 bits, sobra un inversor. Esto podría verse como un "desperdicio" de transistores, aunque no es significativo frente al ahorro en cantidad de componentes, complejidad y tamaño del circuito final. Otra alternativa podría haber sido utilizar un 7404, seis inversores en un mismo paquete. Sin embargo, al requerirse 7, el último debería armarse usando un circuito como el sugerido por Motorola, lo que complejiza el diseño en el acotado espacio del que se dispone.
 
 Asimismo, se cambiaron los resistores de protección de los LEDs con resistores de 180Ω, un valor recomendado para esta aplicación. Se omitieron los resistores de _pull-up_ para reducir la cantidad de componentes. El circuito resultante es como el de la siguiente figura:
 
@@ -123,15 +121,21 @@ Para validar el diseño propuesto se conectan los componentes de la siguiente ma
 
 En la siguiente figura se muestra el sistema completo listo para iniciar las pruebas de funcionamiento:
 
-Para alimentar el kit completo se utiliza una fuente ATX estándar. De acuerdo con la documentación de Motorola, una fuente que proporcione +5V/6A es más que suficiente.
+Para alimentar el kit completo se utiliza una fuente ATX estándar. De acuerdo con la documentación de Motorola, una fuente que proporcione +5V/6A es más que suficiente. Al alimentar el circuito y presionar `RESET`, se observó lo siguiente:
 
-### Pruebas de validación
+El sistema muestra el prompt `-`, indicando que está listo para recibir comandos. Para hacer una prueba sencilla, se ingresó `E000 M`, para examinar el contenido de la posición de memoria `$E000`, el inicio de JBUG. Se ingresa `G` para pasar a la siguiente posición de memoria. Se ingresa `E` para volver al prompt.
 
-Con el objetivo de comprobar el correcto funcionamiento del kit se escribió un programa en lenguaje de máquina MC6800 que realiza una simple prueba de memoria. El algoritmo es descrito por el siguiente diagrama de flujos:
+Siguiendo el listado de programa del manual, los primeros 10 bytes almacenados a partir de esa posición son `$08 $FF $A0 $1E $08 $FF $A0 $0A $B0 $A0`. En la siguiente figura se pueden ver capturas del display que muestran claramente los valores correctos:
+
+Notar que algunos patrones no se visualizan correctamente. Esto no es una falla en el display, pues los todos los segmentos funcionan. Se desconoce la causa de este problema, aunque se sospecha que esté relacionado con la elección de diseño de quitar los resistores de _pull-up_ relacionados a los segmentos.
+
+### Prueba de Memoria
+
+Con el objetivo de comprobar el correcto funcionamiento de la memoria se escribió un programa en lenguaje de máquina MC6800. El algoritmo es descrito por el siguiente diagrama de flujos:
 
 <div align="center"><img src="https://github.com/user-attachments/assets/ae4fcadf-f04c-467e-bf97-36b8f5e9491e" style="width:30%;height:30%;text-align:center;"></img></div>
 
-En el diagrama, el reporte de error se corresponde con la escritura en RAM del valor `$FF` en caso de producirse un error. El control es devuelto a JBUG una vez realizada la prueba de memoria. Se puede consultar la dirección en la que terminó la prueba ingresando `M A026 G`. El primer byte de la dirección aparecerá en el display. Ingresar `G` para ver el segundo byte. En un kit sin fallas, las direcciones `ACTUAL` y `FIN` deberían ser iguales.
+El control es devuelto a JBUG una vez realizada la prueba de memoria. Se puede consultar la dirección en la que terminó la prueba ingresando `M A026 G`. El primer byte de la dirección aparecerá en el display. Ingresar `G` para ver el segundo byte. En un kit sin fallas, las direcciones `ACTUAL` y `FIN` deberían ser iguales.
 
 El programa se ingresa de a un byte utilizando `M` a partir de la dirección de memoria `$A023` (datos) y `$A030` (programa). Por ejemplo, la primera instrucción, `LDX INICIO`, se ingresa con `A024 M FE G A0 G 24 G`. El comportamiento del kit será de la siguiente manera:
 - Se ingresa la dirección `$A024`, seguido del comando `M`
@@ -187,3 +191,5 @@ A04D  26 E7             BNE    LOOP1
 A04F  3F        FINPGM  SWI
                         END
 ```
+
+Se podrían colocar breakpoints para visualizar el funcionamiento del programa. Sin embargo, al utilizar la RAM de JBUG para almacenar el programa, la creación de breakpoints podría sobrescribir las variables del programa y el resultado del mismo sería incorrecto. Si se quisieran eliminar todos los breakpoints antes de ingresar el programa (y así asegurar que el kit no está utilizando esta zona de memoria), se puede ingresar `V` en el prompt `-`.
