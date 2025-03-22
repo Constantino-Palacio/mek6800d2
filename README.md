@@ -1,7 +1,7 @@
 # Motorola MEK6800D2
 El kit Motorola MEK6800D2 es una SBC (_Single Board Computer_) basada en el procesador MC6800, fabricado por Motorola alrededor de 1977. Se compone de una placa de circuito principal con los componentes del sistema y una placa secundaria con un teclado matricial, display hexadecimal y lógica de control de una unidad de cassette para almacenar datos/programas. Es una versión mejorada del [MEK6800D1](https://www.sardis-technologies.com/pre-st29/mekd1.htm), que sólo podía ser conectada a un bus EXORciser y controlada mediante una terminal serie.
 
-El kit usado en este proyecto no incluye la placa del teclado, por lo que el principal objetivo es construir un módulo de teclado casi funcionalmente equivalente al diseño original de Motorola, pero simplificado por razones de tamaño del circuito y costo de los componentes. Tener en cuenta que el módulo del teclado es esencial para el funcionamiento del kit, puesto que no puede realizarse ninguna operación sin dicho componente (a menos que se hagan numerosas modificaciones al circuito).
+El kit utilizado no incluye la placa del teclado, por lo que se [construyó](./display.md) un módulo de teclado casi funcionalmente equivalente al diseño original de Motorola, pero simplificado por razones de tamaño del circuito y costo de los componentes. Tener en cuenta que el módulo del teclado es esencial para el funcionamiento del kit, puesto que no puede realizarse ninguna operación sin dicho componente (a menos que se hagan numerosas modificaciones al circuito).
 
 ## Descripción General
 
@@ -35,7 +35,7 @@ Ver que la RAM de la placa es la base del mapa de direcciones, mientras que todo
 Originalmente, Motorola enviaba el kit a los interesados junto a la documentación necesaria para su construcción y manuales de programación del MC6800. El paquete incluía las piezas necesarias para un sistema básico (descrito en la sección anterior) y los siguientes manuales:
 - MEK6800D2 Manual: instrucciones de armado y operación básica del kit, incluyendo el listado en ensamblador del programa JBUG
 - M6800 Applications Manual: información detallada de todos los circuitos lógicos de la familia M6800, descripción de aplicaciones posibles e implementación con programas en ensamblador MC6800 y diagramas de circuito.
-- M6800 Programming Manual: información acerca de la programación del procesador MC6800
+- M6800 Programming Manual: información acerca de la programación del procesador MC6800 
 
 Adicionalmente se cuenta con los siguientes libros para referencia del procesador MC6800:
 - American Microsystems. _AMI6800 Assembly Language Programming Manual_.
@@ -43,3 +43,7 @@ Adicionalmente se cuenta con los siguientes libros para referencia del procesado
 - Leventhal, L.A. _Microcomputer Experimentation with the Motorola MEK6800D2_. Prentice Hall. 1981.
 - Perdue, T. _Micro Maestro - A Musical Review of Motorola's MEK6800D2_. Kilobaud Nº13, 01/1978.
 - Southern, R.W. _Programming the 6800 Microprocessor_. 1977.
+
+## Experimentos
+- Réplica funcional del módulo de teclado/display. [Acá](./display.md).
+- Conexión de circuito MC6847 para visualización en monitor. [Acá](./video.md).
