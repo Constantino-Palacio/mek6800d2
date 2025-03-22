@@ -64,7 +64,7 @@ Respetando los planos de circuito explicados en las secciones anteriores se cons
 
 <div align="center"><img src="https://github.com/user-attachments/assets/e3570199-fadc-4905-a605-2bf2cd01ad07" style="width:30%;height:30%;text-align:center;"></img></div>
 
-### Preparación para pruebas
+### Pruebas Básicas
 
 Para validar el diseño propuesto se conectan los componentes de la siguiente manera:
 - El módulo adaptador se conecta en la posición U21 del módulo MPU, con la conexión de alimentación siguiendo la dirección del interruptor de reset. Alternativamente, se puede conectar el MC6820 al adaptador, con el pin 1 hacia la conexión de alimentación. Luego se conecta el adaptador siguiendo la orientación original de U21.
