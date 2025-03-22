@@ -1,4 +1,4 @@
-## Nuevo Módulo de Teclado/Display
+# Nuevo Módulo de Teclado/Display
 
 El diseño original del módulo del teclado se especifica en el manual de uso del kit. A modo de prueba, se decidió utilizar una placa de prototipo de 9x15cm. A continuación se incluye una reproducción del plano esquemático del módulo suministrado por Motorola:
 
@@ -8,7 +8,7 @@ La figura anterior puede dividirse en dos grandes secciones funcionales. La prim
 
 Se optó por eliminar completamente la sección encargada de la comunicación con el grabador, reduciendo el circuito a la mitad. Analizando el circuito resultante, puede observarse que, aunque parezca que aun se tiene gran cantidad de componentes, la funcionalidad es simple y puede seguir simplificándose.
 
-### Control de 7 segmentos
+## Control de 7 segmentos
 
 Cada uno de los segmentos es activado/desactivado por una señal lógica proveniente del puerto A del integrado U21 (MC6820) en el módulo de MPU. Por razones de protección del circuito, se utiliza un circuito sencillo basado en un transistor PNP (MPS2907) y tres resistores: uno de _pull-up_ de 10kΩ, uno de 4.7kΩ en la base, y otro de 68Ω a la salida, para protección del LED dentro del segmento. En la siguiente figura se muestra esta sección del esquemático:
 
@@ -28,7 +28,7 @@ Asimismo, se cambiaron los resistores de protección de los LEDs con resistores 
 
 Al circuito se le agregó un capacitor de desacople en la alimentación del 74240. Observar además que se emplearon módulos de display de 4 dígitos con una distribución de pines no estándar. Esto se debe a que se disponía de estos módulos al momento de la construcción de la placa. Al desconocerse las características específicas de este componente, se determinó la distribución de pines experimentalmente y se utilizó esta información para realizar las conexiones según el esquema anterior.
 
-### Selección de dígitos/filas del teclado
+## Selección de dígitos/filas del teclado
 
 Para la selección de los dígitos y las filas del teclado, el diseño original utiliza tres integrados MC75452, cada uno compuesto por un par de puertas NAND diseñadas para el manejo de dispositivos. Notar que las compuertas conectan una de las entradas a un nivel lógico alto, conectando la otra al puerto B del componente U21 del módulo MPU. Recordando la tabla de verdad de una compuerta NAND, se ve que esta configuración funciona como inversor lógico:
 
@@ -42,7 +42,7 @@ Al igual que con el 74240, se coloca un capacitor de desacople en la alimentaci�
 
 Notar que se han omitido las teclas `P` y `L` en el esquemático. Estas sirven para los comandos de grabación y lectura de cassette, respectivamente. Al eliminarse dicha funcionalidad, se consideró apropiado eliminar las teclas correspondientes para evitar cualquier tipo de falla en el kit que pueda producirse al intentar interactuar con un periférico inexistente.
 
-### Selección de las columnas del teclado
+## Selección de las columnas del teclado
 
 Para determinar la tecla que se presionó en un instante de tiempo dado, Motorola emplea un único circuito integrado del tipo MC14539. Este es un selector dual de 4-canales, es decir, permite seleccionar 1 de 4 entradas. Es funcionalmente equivalente al 74153. Se utilizó este último por ser más fácil de obtener. Se respetó el plano original en este caso:
 
@@ -50,7 +50,7 @@ Para determinar la tecla que se presionó en un instante de tiempo dado, Motorol
 
 Ver que las conexiones de entrada del integrado son las cuatro columnas del teclado `COL1`, `COL2`, `COL3` y `COL4`, y el número de columna a leer, conectado a los terminales `PB6` y `PB7` del integrado U21 de la placa MPU. A este componente también se vincula la salida `Za`, el valor lógico presente en la columna seleccionada mediante `S0` y `S1`. La salida `Za` se conecta al pin `PA7` de U21. Por este motivo es que se deja `PA7` en bajo cuando se escribe el patrón de los dígitos para el display.
 
-### Implementación
+## Implementación
 
 Para implementar el teclado se decidió utilizar dos placas de circuito. La placa principal es el teclado y display, junto a la electrónica de soporte. Esta se conecta mediante un cable plano de 20 conductores a un módulo adaptador que permite conectar el teclado al MPU sin tener que utilizar el conector de borde de 50 pines propuesto por Motorola.
 
@@ -64,7 +64,7 @@ Respetando los planos de circuito explicados en las secciones anteriores se cons
 
 <div align="center"><img src="https://github.com/user-attachments/assets/e3570199-fadc-4905-a605-2bf2cd01ad07" style="width:30%;height:30%;text-align:center;"></img></div>
 
-### Pruebas Básicas
+## Prueba de Funcionamiento
 
 Para validar el diseño propuesto se conectan los componentes de la siguiente manera:
 - El módulo adaptador se conecta en la posición U21 del módulo MPU, con la conexión de alimentación siguiendo la dirección del interruptor de reset. Alternativamente, se puede conectar el MC6820 al adaptador, con el pin 1 hacia la conexión de alimentación. Luego se conecta el adaptador siguiendo la orientación original de U21.
