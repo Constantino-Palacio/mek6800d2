@@ -46,4 +46,5 @@ Adicionalmente se cuenta con los siguientes libros para referencia del procesado
 
 ## Experimentos
 - Réplica funcional del módulo de teclado/display. [Acá](./display.md).
+- Programa para prueba de memoria RAM. [Acá](./memtest.md).
 - Conexión de circuito MC6847 para visualización en monitor. [Acá](./video.md).
