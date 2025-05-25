@@ -82,7 +82,3 @@ El sistema muestra el prompt `-`, indicando que está listo para recibir comando
 Siguiendo el listado de programa del manual, los primeros 10 bytes almacenados a partir de esa posición son `$08 $FF $A0 $1E $08 $FF $A0 $0A $B0 $A0`. En la siguiente figura se pueden ver capturas del display que muestran claramente los valores correctos:
 
 Notar que algunos patrones no se visualizan correctamente. Esto no es una falla en el display, pues los todos los segmentos funcionan. Se desconoce la causa de este problema, aunque se sospecha que esté relacionado con la elección de diseño de quitar los resistores de _pull-up_ relacionados a los segmentos.
-
-## Segunda versión
-
-Utilizando una placa de prototipado para EXORbus, se diseñó un sustituto para la placa adaptadora del MC6820 que le dará mayor rigidez al diseño y permitirá mayor expansión del kit. El conexionado de los componentes es el mismo, usando un conector de 20 pines para el módulo de teclado construido y uno de 9 pines para una futura conexión para terminal serie usando el MC6850 provisto en el kit.
