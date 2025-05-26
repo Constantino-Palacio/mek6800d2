@@ -1,6 +1,6 @@
 # Expansión de memoria
 
-Esta sección describe el diseño de una expansión de memoria RAM y ROM para el kit MEK6800D2. El objetivo es llevar la memoria total del sistema a 8.5KB de RAM e intentar aprovechar alguno o ambos zócalos de PROM del kit (U10 y U12).
+Esta sección describe el diseño de una expansión de memoria RAM para el kit MEK6800D2. El objetivo es llevar la memoria total del sistema a 8.5KB de RAM.
 
 ## Expansión de RAM
 
