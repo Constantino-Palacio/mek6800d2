@@ -47,5 +47,5 @@ Adicionalmente se cuenta con los siguientes libros para referencia del procesado
 ## Experimentos
 - Réplica funcional del módulo de teclado/display. [Acá](./display.md).
 - Programa para prueba de memoria RAM. [Acá](./memtest.md).
-- Expansión de RAM a 8.5KB y extensión de ROM. [Acá](./ramex.md).
+- Expansión de RAM a 8.5KB. [Acá](./ramex.md).
 - Conexión de circuito MC6847 para visualización en monitor. [Acá](./video.md).
