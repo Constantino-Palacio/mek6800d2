@@ -64,3 +64,30 @@ A04F  3F        FINPGM  SWI
 ```
 
 Se podrían colocar breakpoints para visualizar el funcionamiento del programa. Sin embargo, al utilizar la RAM de JBUG para almacenar el programa, la creación de breakpoints podría sobrescribir las variables del programa y el resultado del mismo sería incorrecto. Si se quisieran eliminar todos los breakpoints antes de ingresar el programa (y así asegurar que el kit no está utilizando esta zona de memoria), se puede ingresar `V` en el prompt `-`.
+
+## Prueba Exhaustiva
+Se diseña otro algoritmo para verificar la integridad de la memoria. Utiliza código "dinámico" (self-modifying code) para ahorrar memoria. La funcionalidad es similar: se escribe un patrón en memoria, se lo vuelve a leer y, si no coincide, se detiene el programa. El algoritmo es más lento, pero verifica cada bit de cada una de las direcciones del rango dado.
+
+Para ver el estado, validar que el contenido de `$A043` (puntero de fin) coincida con `$A033` (puntero de arranque _dinámico_).
+
+```
+                ;-----------------------------------
+                ; MEK6800D2 MEMORY TEST    REV 2
+                ;
+                ; CONSTANTINO A.PALACIO, 2025-06-11
+                ;-----------------------------------
+A030            ORG            $A030
+A030  86 01     PRGINI  LDA A  #$01         ; INITIAL PATTERN = $01
+A032  CE 00 00          LDX    #$0000       ; START ADDRESS = $0000
+A035  A7 00     CHKLOP  STA A  0,X
+A037  01 00             CMP A  0,X
+A039  26 0C             BNE    PRGFIN       ; RETURN ON ERROR
+A03B  49                ROLA
+A03C  24 F7             BCC    CHKLOP
+A03E  08                INX
+A03F  FF A0 33          STX    $A033        ; PRGINI + 3 (SELF-MOD)
+A042  8C 22 00          CPX    #$2200       ; END ADDRESS = $2200
+A045  26 E9             BNE    PRGINI
+A047  3F                SWI                 ; RETURN TO JBUG
+                        END
+```
