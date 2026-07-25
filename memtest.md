@@ -80,7 +80,7 @@ A030            ORG            $A030
 A030  86 01     PRGINI  LDA A  #$01         ; INITIAL PATTERN = $01
 A032  CE 00 00          LDX    #$0000       ; START ADDRESS = $0000
 A035  A7 00     CHKLOP  STA A  0,X
-A037  01 00             CMP A  0,X
+A037  A1 00             CMP A  0,X
 A039  26 0C             BNE    PRGFIN       ; RETURN ON ERROR
 A03B  49                ROLA
 A03C  24 F7             BCC    CHKLOP
