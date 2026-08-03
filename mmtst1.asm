@@ -10,9 +10,9 @@
 *
 ****RAM POINTERS
 *
-INI     RMB   $0000
-ACT     RMB   $0000
-FIN     RMB   $0200
+INI     FDB   $0000
+ACT     FDB   $0000
+FIN     FDB   $0200
 *
 ****MAIN PROGRAM
 *
