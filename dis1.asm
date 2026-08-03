@@ -1,0 +1,44 @@
+    NAM DIS1
+****************************************************
+* MEK6800D2 RANDOM NOISE ON AM RADIO AND DISPLAY
+* TUNE RADIO CLOSE TO 525 KHZ
+*
+* CONSTANTINO A.PALACIO, 2026-08-03
+*
+* SYNTAX IS SAME AS JBUG LISTING ON MEK6800D2 MANUAL
+* PAGE A1-1
+****************************************************
+        ORG   $1030
+*
+**LET'S USE MEMORY CONTENTS AS A BASE FOR OUR NOISE
+*
+        LDX   #$0000
+*
+**PERFORM SOME OPERATIONS ON A
+**EXPLORE DIFFERENT KINDS OF OPERATIONS
+*
+HERE    TPA
+        LSRA
+        EORA  0,X
+        STAA  $8022   DISPLAY DIGIT SELECT
+        COMA
+        STAA  $8020   DISPLAY SEGMENT SELECT
+        ROLA
+        TAB
+        TPA
+        SBA
+        COMB
+*
+**GENERATE SOME DELAY, THIS AFFECTS THE
+**FREQUENCY OF THE NOISE HEARD ON THE RADIO
+*
+DELY    ASLA
+DEY2    BNE   DELY
+        LSRB
+        BNE   DEY2
+*
+**ADVANCE TO THE NEXT MEMORY LOCATION
+*
+        INX
+        BRA   HERE
+        END
