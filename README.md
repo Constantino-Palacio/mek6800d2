@@ -50,4 +50,5 @@ Adicionalmente se cuenta con los siguientes libros para referencia del procesado
 - Réplica funcional del módulo de teclado/display. [Acá](./display.md).
 - Programa para prueba de memoria RAM. [Acá](./memtest.md).
 - Expansión de RAM a 8.5KB y 32KB. [Acá](./ramex.md).
+- Generación de sonidos en radio AM. [Acá](./sound.md).
 - Conexión de circuito MC6847 para visualización en monitor. [Acá](./video.md).
